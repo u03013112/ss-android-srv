@@ -52,6 +52,27 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 // Keepalive :
 func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.KeepaliveReply, error) {
 	ret := new(pb.KeepaliveReply)
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	ret.ExpiresDate = user.ExpireDate.Unix()
+	ret.NeedStop = false
+	if user.ExpireDate.Unix() > time.Now().Unix() {
+		ret.NeedStop = true
 
+	}
+	ret.Total = user.TotalRxTraffic
+	use := int64(0)
+	if in.Rx >= user.BaseRxTraffic {
+		use = in.Rx - user.BaseRxTraffic
+	} else {
+		use = in.Rx
+	}
+	user.BaseRxTraffic = in.Rx
+	user.UsedRxTraffic = use + user.UsedRxTraffic
+	ret.Used = user.UsedRxTraffic
+	user.update()
 	return ret, nil
 }

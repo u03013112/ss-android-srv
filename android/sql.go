@@ -59,6 +59,11 @@ func getUserByToken(token string) (*User, error) {
 	return nil, db.Error
 }
 
+func (u *User) update() error {
+	db := sql.GetInstance().Save(u)
+	return db.Error
+}
+
 // func (u *User) updateExpireDate(t time.Time, sj string) error {
 // 	db := sql.GetInstance().Model(u).Update(User{
 // 		ExpireDate: t,
