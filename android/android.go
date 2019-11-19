@@ -59,9 +59,8 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 	}
 	ret.ExpiresDate = user.ExpireDate.Unix()
 	ret.NeedStop = false
-	if user.ExpireDate.Unix() > time.Now().Unix() {
+	if user.ExpireDate.Unix() < time.Now().Unix() {
 		ret.NeedStop = true
-
 	}
 	ret.Total = user.TotalRxTraffic
 	use := int64(0)
@@ -73,6 +72,9 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 	user.BaseRxTraffic = in.Rx
 	user.UsedRxTraffic = use + user.UsedRxTraffic
 	ret.Used = user.UsedRxTraffic
+	if user.UsedRxTraffic >= user.TotalRxTraffic {
+		ret.NeedStop = true
+	}
 	user.update()
 	return ret, nil
 }
