@@ -25,4 +25,7 @@ jobs:
         fi
 
     - name: Build
-      run: go build -v .
+      run: go build -o build/ss-android
+      
+    - name: Docker build
+      run:  docker build -t u03013112/ss-android .
