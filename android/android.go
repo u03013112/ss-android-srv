@@ -87,6 +87,9 @@ func (s *Srv) GetProdectionList(ctx context.Context, in *pb.GetProdectionListReq
 	ret := new(pb.GetProdectionListReply)
 	pList, err := (new(Production)).findAll()
 	for _, p := range pList {
+		if p.Hiden != 0 {
+			continue
+		}
 		pro := pb.Prodection{
 			ID:          int64(p.ID),
 			Time:        p.Time,
@@ -102,5 +105,34 @@ func (s *Srv) GetProdectionList(ctx context.Context, in *pb.GetProdectionListReq
 // BuyTest :
 func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestReply, error) {
 	ret := new(pb.BuyTestReply)
+
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	p := new(Production)
+	p.ID = uint(in.ProdectionID)
+	if err := p.getByID(); err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+
+	if user.ExpireDate.Unix() > time.Now().Unix() { //有效期内
+		user.ExpireDate = user.ExpireDate.AddDate(0, 0, int(p.Time))
+		user.TotalRxTraffic = user.TotalRxTraffic + p.Total
+	} else {
+		user.ExpireDate = time.Now().AddDate(0, 0, int(p.Time))
+		user.TotalRxTraffic = p.Total
+		user.UsedRxTraffic = 0
+	}
+
+	user.update()
+
+	bill := new(Bill)
+	bill.UserID = int64(user.ID)
+	bill.ProductionID = int64(p.ID)
+	bill.record()
+
 	return ret, nil
 }

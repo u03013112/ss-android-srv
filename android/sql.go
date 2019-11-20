@@ -71,10 +71,27 @@ type Production struct {
 	Time        int64
 	Total       int64
 	Price       int64
+	Hiden       int64
 }
 
 func (p *Production) findAll() ([]Production, error) {
 	pList := []Production{}
 	db := sql.GetInstance().Find(&pList)
 	return pList, db.Error
+}
+
+func (p *Production) getByID() error {
+	db := sql.GetInstance().Where(p).First(p)
+	return db.Error
+}
+
+// Bill :
+type Bill struct {
+	sql.BaseModel
+	UserID       int64
+	ProductionID int64
+}
+
+func (b *Bill) record() {
+	sql.GetInstance().Create(b)
 }
