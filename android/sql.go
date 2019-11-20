@@ -25,7 +25,7 @@ func (User) TableName() string {
 
 // InitDB : 初始化表格，建议在整个数据库初始化之后调用
 func InitDB() {
-	sql.GetInstance().AutoMigrate(&User{})
+	sql.GetInstance().AutoMigrate(&User{}, &Production{})
 }
 
 func getOrCreateUserByUUID(uuid string) User {
@@ -64,10 +64,17 @@ func (u *User) update() error {
 	return db.Error
 }
 
-// func (u *User) updateExpireDate(t time.Time, sj string) error {
-// 	db := sql.GetInstance().Model(u).Update(User{
-// 		ExpireDate: t,
-// 		Sj:         sj,
-// 	})
-// 	return db.Error
-// }
+// Production :
+type Production struct {
+	sql.BaseModel
+	Description string
+	Time        int64
+	Total       int64
+	Price       int64
+}
+
+func (p *Production) findAll() ([]Production, error) {
+	pList := []Production{}
+	db := sql.GetInstance().Find(&pList)
+	return pList, db.Error
+}
