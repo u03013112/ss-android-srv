@@ -88,8 +88,13 @@ func (p *Production) getByID() error {
 // Bill :
 type Bill struct {
 	sql.BaseModel
-	UserID       int64
-	ProductionID int64
+	UserID       int64 `json:"userID,omitempty"`
+	ProductionID int64 `json:"productionID,omitempty"`
+}
+
+// TableName :
+func (Bill) TableName() string {
+	return "android_bills"
 }
 
 func (b *Bill) record() {
