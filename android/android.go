@@ -104,8 +104,6 @@ func (s *Srv) GetProdectionList(ctx context.Context, in *pb.GetProdectionListReq
 
 // BuyTest :
 func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestReply, error) {
-	ret := new(pb.BuyTestReply)
-
 	user, err := getUserByToken(in.Token)
 	if err != nil {
 		fmt.Print(err.Error())
@@ -134,5 +132,11 @@ func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestRe
 	bill.ProductionID = int64(p.ID)
 	bill.record()
 
-	return ret, nil
+	ret := pb.BuyTestReply{
+		ExpiresDate: user.ExpireDate.Unix(),
+		Total:       user.TotalRxTraffic,
+		Used:        user.UsedRxTraffic,
+	}
+
+	return &ret, nil
 }
