@@ -25,7 +25,10 @@ jobs:
         fi
 
     - name: Build
-      run: go build -o build/ss-android
+      run: go build  -v -o ./build/ss-android -gcflags "-N -l" main.go
       
     - name: Docker build
       run:  docker build -t u03013112/ss-android .
+
+    - name: Docker push
+      run: docker push u03013112/ss-android
