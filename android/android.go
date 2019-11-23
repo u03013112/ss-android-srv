@@ -2,7 +2,6 @@ package android
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -34,10 +33,14 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 		return nil, err
 	}
 	if user.ExpireDate.Unix() < time.Now().Unix() {
-		return &pb.GetConfigReply{}, errors.New("ExpireDate")
+		return &pb.GetConfigReply{
+			Error: "已过期，请及时续费",
+		}, nil
 	}
 	if user.TotalRxTraffic < user.UsedRxTraffic {
-		return &pb.GetConfigReply{}, errors.New("TrafficOut")
+		return &pb.GetConfigReply{
+			Error: "流量不足，请及时续费",
+		}, nil
 	}
 	ret := new(pb.GetConfigReply)
 	if config, err := grpcGetConfig(); err != nil {
