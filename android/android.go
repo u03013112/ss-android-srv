@@ -76,7 +76,7 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 		use = in.Rx
 	}
 	user.BaseRxTraffic = in.Rx
-	user.UsedRxTraffic = use + user.UsedRxTraffic
+	user.UsedRxTraffic += use
 	ret.Used = user.UsedRxTraffic
 	if user.UsedRxTraffic >= user.TotalRxTraffic {
 		ret.NeedStop = true
@@ -142,4 +142,11 @@ func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestRe
 	}
 
 	return &ret, nil
+}
+
+// GetGoogleAd :
+func (s *Srv) GetGoogleAd(ctx context.Context, in *pb.GetGoogleAdRequest) (*pb.GetGoogleAdReply, error) {
+	ret := new(pb.GetGoogleAdReply)
+	ret.Id = getGoogleAd()
+	return ret,nil
 }

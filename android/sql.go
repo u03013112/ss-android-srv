@@ -25,7 +25,7 @@ func (User) TableName() string {
 
 // InitDB : 初始化表格，建议在整个数据库初始化之后调用
 func InitDB() {
-	sql.GetInstance().AutoMigrate(&User{}, &Production{})
+	sql.GetInstance().AutoMigrate(&User{}, &Production{},&GoogleAd{})
 }
 
 func getOrCreateUserByUUID(uuid string) User {
@@ -99,4 +99,16 @@ func (Bill) TableName() string {
 
 func (b *Bill) record() {
 	sql.GetInstance().Create(b)
+}
+
+// GoogleAd :
+type GoogleAd struct {
+	sql.BaseModel
+	Gid string
+}
+
+func getGoogleAd() string {
+	var g GoogleAd
+	sql.GetInstance().First(&g)
+	return g.Gid
 }
