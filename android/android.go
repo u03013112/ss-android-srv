@@ -148,5 +148,24 @@ func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestRe
 func (s *Srv) GetGoogleAd(ctx context.Context, in *pb.GetGoogleAdRequest) (*pb.GetGoogleAdReply, error) {
 	ret := new(pb.GetGoogleAdReply)
 	ret.Id = getGoogleAd()
-	return ret,nil
+	return ret, nil
+}
+
+// GetUserInfo :
+func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.GetUserInfoReply, error) {
+	ret := &pb.GetUserInfoReply{
+		Status: "normal",
+	}
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	if user.ExpireDate.Unix() < time.Now().Unix() {
+		ret.Status = "expired"
+	}
+	if user.TotalRxTraffic < user.UsedRxTraffic {
+		ret.Status = "outOfTraffic"
+	}
+	return ret, nil
 }
