@@ -2,21 +2,47 @@ package android
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	uuid "github.com/nu7hatch/gouuid"
 	pb "github.com/u03013112/ss-pb/android"
+	"google.golang.org/grpc/metadata"
 )
 
 // Srv ：服务
 type Srv struct{}
 
+// DebugJSON : DebugJSON
+func DebugJSON(v interface{}) {
+	data, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("[%s]", data)
+}
+
 // Login :
 func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
+	ip := "unknow"
+	version := "too old"
+	mi, _ := metadata.FromIncomingContext(ctx)
+	// DebugJSON(mi)
+	if x, ok := mi["x-forwarded-for"]; ok == true {
+		ipList := x[0]
+		ip = strings.Split(ipList, ",")[0]
+	}
+
 	user := getOrCreateUserByUUID(in.Uuid)
 	token, _ := uuid.NewV4()
-	user.updateToken(token.String())
+
+	if in.Version != "" {
+		version = in.Version
+	}
+
+	user.updateUserInfo(token.String(), ip, version)
 	return &pb.LoginReply{
 		Token:       user.Token,
 		ExpiresDate: user.ExpireDate.Unix(),

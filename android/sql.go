@@ -12,10 +12,12 @@ type User struct {
 	UUID           string    `json:"uuid,omitempty"`
 	Token          string    `json:"token,omitempty"`
 	ExpireDate     time.Time `json:"expireDate,omitempty"`
-	TotalRxTraffic int64
-	UsedRxTraffic  int64
-	BaseRxTraffic  int64
-	Online         bool `json:"online,omitempty"`
+	TotalRxTraffic int64     `json:"totalRxTraffic,omitempty"`
+	UsedRxTraffic  int64     `json:"usedRxTraffic,omitempty"`
+	BaseRxTraffic  int64     `json:"baseRxTraffic,omitempty"`
+	Online         bool      `json:"online,omitempty"`
+	IP             string    `json:"ip,omitempty"`
+	ClientVersion  string    `json:"clientVersion,omitempty"`
 }
 
 // TableName :
@@ -25,7 +27,7 @@ func (User) TableName() string {
 
 // InitDB : 初始化表格，建议在整个数据库初始化之后调用
 func InitDB() {
-	sql.GetInstance().AutoMigrate(&User{}, &Production{},&GoogleAd{})
+	sql.GetInstance().AutoMigrate(&User{}, &Production{}, &GoogleAd{})
 }
 
 func getOrCreateUserByUUID(uuid string) User {
@@ -47,6 +49,14 @@ func getOrCreateUserByUUID(uuid string) User {
 func (u *User) updateToken(token string) {
 	sql.GetInstance().Model(u).Update(User{
 		Token: token,
+	})
+}
+
+func (u *User) updateUserInfo(token string, ip string, version string) {
+	sql.GetInstance().Model(u).Update(User{
+		Token:         token,
+		IP:            ip,
+		ClientVersion: version,
 	})
 }
 
