@@ -13,7 +13,6 @@ const (
 	port = ":50003"
 )
 
-// for ci
 func main() {
 	android.InitDB()
 	lis, err := net.Listen("tcp", port)
