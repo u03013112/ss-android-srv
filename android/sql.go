@@ -27,7 +27,7 @@ func (User) TableName() string {
 
 // InitDB : 初始化表格，建议在整个数据库初始化之后调用
 func InitDB() {
-	sql.GetInstance().AutoMigrate(&User{}, &Production{}, &GoogleAd{})
+	sql.GetInstance().AutoMigrate(&User{}, &Production{}, &GoogleAd{}, &Bill{}, &LoginLog{})
 }
 
 func getOrCreateUserByUUID(uuid string) User {
@@ -121,4 +121,20 @@ func getGoogleAd() string {
 	var g GoogleAd
 	sql.GetInstance().First(&g)
 	return g.Gid
+}
+
+// LoginLog :
+type LoginLog struct {
+	sql.BaseModel
+	UserID int64  `json:"userID,omitempty"`
+	IP     string `json:"ip,omitempty"`
+}
+
+// TableName :
+func (LoginLog) TableName() string {
+	return "android_login_logs"
+}
+
+func (b *LoginLog) record() {
+	sql.GetInstance().Create(b)
 }

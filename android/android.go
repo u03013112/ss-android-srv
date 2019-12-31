@@ -43,6 +43,12 @@ func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, e
 	}
 
 	user.updateUserInfo(token.String(), ip, version)
+
+	log := new(LoginLog)
+	log.UserID = int64(user.ID)
+	log.IP = ip
+	log.record()
+
 	return &pb.LoginReply{
 		Token:       user.Token,
 		ExpiresDate: user.ExpireDate.Unix(),
