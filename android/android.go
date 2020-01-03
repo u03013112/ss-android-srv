@@ -2,6 +2,7 @@ package android
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -85,6 +86,47 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 		ret.Passwd = config.Passwd
 	}
 	return ret, nil
+}
+
+// GetConfigNew :
+func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetConfigNewReply, error) {
+	ret := new(pb.GetConfigNewReply)
+	ret0 := new(pb.GetConfigReply)
+
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	if user.ExpireDate.Unix() < time.Now().Unix() {
+		ret0.Error = "已过期，请及时续费"
+	}
+	if user.TotalRxTraffic < user.UsedRxTraffic {
+		ret0.Error = "流量不足，请及时续费"
+	}
+	config, err := grpcGetConfig()
+	if err != nil {
+		fmt.Print(err.Error())
+		return ret, err
+	}
+	if ret0.Error == "" {
+		ret0.IP = config.IP
+		ret0.Port = config.Port
+		ret0.Method = config.Method
+		ret0.Passwd = config.Passwd
+	}
+	j, _ := json.Marshal(ret0)
+	ret.Config = encode(string(j))
+	return ret, nil
+}
+
+func encode(str string) string {
+	var i = 'a'
+	var ret = base64.StdEncoding.EncodeToString([]byte(str))
+	for i = 'a'; i <= 'z'; i++ {
+		ret = strings.Replace(ret, fmt.Sprintf("%c", i), fmt.Sprintf(".%c", i-1), -1)
+	}
+	return ret
 }
 
 // Keepalive :

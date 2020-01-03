@@ -17,6 +17,12 @@ service Android {
             body: "*"
         };
     }
+    rpc GetConfigNew (GetConfigRequest) returns (GetConfigNewReply){
+        option (google.api.http) = {
+            post: "/v1/android/get-config"
+            body: "*"
+        };
+    }
     rpc Keepalive (KeepaliveRequest) returns (KeepaliveReply){
         option (google.api.http) = {
             post: "/v1/android/keepalive"
@@ -127,4 +133,8 @@ message GetUserInfoRequest {
 
 message GetUserInfoReply {
     string status = 1; //normal,expired,outOfTraffic and so on
+}
+
+message GetConfigNewReply {
+    string config = 1;
 }
