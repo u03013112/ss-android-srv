@@ -60,6 +60,11 @@ func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, e
 
 // GetConfig :
 func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetConfigReply, error) {
+	return &pb.GetConfigReply{
+		Error: "版本过旧，请及时升级！",
+	}, nil
+
+	// 接口作废
 	user, err := getUserByToken(in.Token)
 	if err != nil {
 		fmt.Print(err.Error())
