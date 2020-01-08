@@ -47,7 +47,12 @@ service Android {
             body: "*"
         };
     }
-
+    rpc GetGoogleAdFree (GetGoogleAdRequest) returns (GetGoogleAdReply){
+        option (google.api.http) = {
+            post: "/v1/android/getGoogleAdFree"
+            body: "*"
+        };
+    }
     rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoReply) {}
 }
 

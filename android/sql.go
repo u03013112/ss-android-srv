@@ -123,6 +123,12 @@ func getGoogleAd() string {
 	return g.Gid
 }
 
+func getGoogleAdFree() string {
+	var g GoogleAd
+	sql.GetInstance().First(&g, 2)
+	return g.Gid
+}
+
 // LoginLog :
 type LoginLog struct {
 	sql.BaseModel

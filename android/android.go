@@ -230,6 +230,13 @@ func (s *Srv) GetGoogleAd(ctx context.Context, in *pb.GetGoogleAdRequest) (*pb.G
 	return ret, nil
 }
 
+// GetGoogleAdFree :
+func (s *Srv) GetGoogleAdFree(ctx context.Context, in *pb.GetGoogleAdRequest) (*pb.GetGoogleAdReply, error) {
+	ret := new(pb.GetGoogleAdReply)
+	ret.Id = getGoogleAdFree()
+	return ret, nil
+}
+
 // GetUserInfo :
 func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.GetUserInfoReply, error) {
 	ret := &pb.GetUserInfoReply{
