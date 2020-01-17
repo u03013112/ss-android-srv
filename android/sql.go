@@ -15,6 +15,8 @@ type User struct {
 	TotalRxTraffic int64     `json:"totalRxTraffic,omitempty"`
 	UsedRxTraffic  int64     `json:"usedRxTraffic,omitempty"`
 	BaseRxTraffic  int64     `json:"baseRxTraffic,omitempty"`
+	UsedTxTraffic  int64     `json:"usedTxTraffic,omitempty"`
+	BaseTxTraffic  int64     `json:"baseTxTraffic,omitempty"`
 	Online         bool      `json:"online,omitempty"`
 	IP             string    `json:"ip,omitempty"`
 	ClientVersion  string    `json:"clientVersion,omitempty"`

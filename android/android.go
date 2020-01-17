@@ -147,19 +147,32 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 	if user.ExpireDate.Unix() < time.Now().Unix() {
 		ret.NeedStop = true
 	}
+	// 总量，虽然名字叫Rx，但是目前是双方向的，这个统计方式需要再尝试。
 	ret.Total = user.TotalRxTraffic
-	use := int64(0)
+
+	rxUse := int64(0)
 	if in.Rx >= user.BaseRxTraffic {
-		use = in.Rx - user.BaseRxTraffic
+		rxUse = in.Rx - user.BaseRxTraffic
 	} else {
-		use = in.Rx
+		rxUse = in.Rx
 	}
 	user.BaseRxTraffic = in.Rx
-	user.UsedRxTraffic += use
-	ret.Used = user.UsedRxTraffic
-	if user.UsedRxTraffic >= user.TotalRxTraffic {
+	user.UsedRxTraffic += rxUse
+
+	txUse := int64(0)
+	if in.Tx >= user.BaseTxTraffic {
+		txUse = in.Tx - user.BaseTxTraffic
+	} else {
+		txUse = in.Tx
+	}
+	user.BaseTxTraffic = in.Tx
+	user.UsedTxTraffic += txUse
+
+	ret.Used = user.UsedRxTraffic + user.UsedTxTraffic
+	if user.UsedRxTraffic+user.UsedTxTraffic >= user.TotalRxTraffic {
 		ret.NeedStop = true
 	}
+
 	user.update()
 	return ret, nil
 }
