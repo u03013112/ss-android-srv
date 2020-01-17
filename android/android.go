@@ -54,7 +54,7 @@ func (s *Srv) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, e
 		Token:       user.Token,
 		ExpiresDate: user.ExpireDate.Unix(),
 		Total:       user.TotalRxTraffic,
-		Used:        user.UsedRxTraffic,
+		Used:        user.UsedRxTraffic + user.UsedTxTraffic,
 	}, nil
 }
 
@@ -75,7 +75,7 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 			Error: "已过期，请及时续费",
 		}, nil
 	}
-	if user.TotalRxTraffic < user.UsedRxTraffic {
+	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
 		return &pb.GetConfigReply{
 			Error: "流量不足，请及时续费",
 		}, nil
@@ -106,7 +106,7 @@ func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.Ge
 	if user.ExpireDate.Unix() < time.Now().Unix() {
 		ret0.Error = "已过期，请及时续费"
 	}
-	if user.TotalRxTraffic < user.UsedRxTraffic {
+	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
 		ret0.Error = "流量不足，请及时续费"
 	}
 	config, err := grpcGetConfig()
@@ -218,6 +218,7 @@ func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestRe
 		user.ExpireDate = time.Now().AddDate(0, 0, int(p.Time))
 		user.TotalRxTraffic = p.Total
 		user.UsedRxTraffic = 0
+		user.UsedTxTraffic = 0
 	}
 
 	user.update()
@@ -230,7 +231,7 @@ func (s *Srv) BuyTest(ctx context.Context, in *pb.BuyTestRequest) (*pb.BuyTestRe
 	ret := pb.BuyTestReply{
 		ExpiresDate: user.ExpireDate.Unix(),
 		Total:       user.TotalRxTraffic,
-		Used:        user.UsedRxTraffic,
+		Used:        user.UsedRxTraffic + user.UsedTxTraffic,
 	}
 
 	return &ret, nil
@@ -263,7 +264,7 @@ func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.G
 	if user.ExpireDate.Unix() < time.Now().Unix() {
 		ret.Status = "expired"
 	}
-	if user.TotalRxTraffic < user.UsedRxTraffic {
+	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
 		ret.Status = "outOfTraffic"
 	}
 	return ret, nil
