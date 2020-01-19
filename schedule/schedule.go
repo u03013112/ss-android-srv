@@ -33,7 +33,7 @@ type used struct {
 }
 
 func getJMSUsed() (float64, error) {
-	resp, err := http.Get("http://frp.u03013112.win:28000/used")
+	resp, err := http.Get("http://jms:28000/used")
 	if err != nil {
 		fmt.Println(err)
 		return 0, errors.New("getUsed() get err")
@@ -58,7 +58,7 @@ type passwd struct {
 }
 
 func changePasswd() (string, error) {
-	resp, err := http.Get("http://frp.u03013112.win:28000/changepasswd")
+	resp, err := http.Get("http://jms:28000/changepasswd")
 	if err != nil {
 		fmt.Println(err)
 		return "", errors.New("changePasswd() get err")
