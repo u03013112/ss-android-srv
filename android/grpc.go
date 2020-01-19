@@ -32,3 +32,22 @@ func grpcGetConfig() (*config.GetSSConfigReply, error) {
 	}
 	return r, nil
 }
+
+func GrpcSetPasswd(passwd string) error {
+	conn, err := grpc.Dial(configAddress, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := config.NewSSConfigClient(conn)
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	_, err = c.SetPasswd(ctx, &config.SetPasswdRequest{Passwd: passwd})
+	if err != nil {
+		log.Printf("could not SetPasswd: %v", err)
+		return err
+	}
+	return nil
+}
