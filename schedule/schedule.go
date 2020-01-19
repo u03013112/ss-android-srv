@@ -22,7 +22,7 @@ func Init() {
 				fmt.Printf("ckecj err:%s\n", e)
 				continue
 			}
-			time.Sleep(time.Second * 300)
+			time.Sleep(time.Second * 600)
 		}
 	}()
 }
