@@ -130,14 +130,15 @@ func check() error {
 	record.TotalUsedInJMS = ju
 	record.TotalUsedInSystem = su
 
-	if (record.UsedInSystem > 0 && (record.UsedInJMS/record.UsedInSystem) > 5) ||
-		(record.UsedInSystem == 0 && record.UsedInJMS > 1) { //jms中使用超过系统统计的5倍，就改密码
-		p, e := changePasswd()
-		if e != nil {
-			return e
+	if record.UsedInJMS > 0.5 { // 用量较大
+		if record.UsedInJMS == 0 || (record.UsedInJMS/record.UsedInSystem > 5) { //jms中使用超过系统统计的5倍，就改密码
+			p, e := changePasswd()
+			if e != nil {
+				return e
+			}
+			record.ChangePasswd = p
+			android.GrpcSetPasswd(p)
 		}
-		record.ChangePasswd = p
-		android.GrpcSetPasswd(p)
 	}
 	sql.GetInstance().Create(record)
 
