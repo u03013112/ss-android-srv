@@ -344,6 +344,8 @@ github.com/u03013112/ss-pb v1.0.27 h1:R7EcQaKxiR1TdwaldGDtldxpjoLhM3hUpbtiT9X3JY
 github.com/u03013112/ss-pb v1.0.27/go.mod h1:G6V/9h3aMEpKsGOLX6hsTZznLC4n5Y4DNLv2yka1Pco=
 github.com/u03013112/ss-pb v1.0.30 h1:Qd6DqF9h4MwppFCW8e0QV8N+f54L4gFZTAuest0DNZ4=
 github.com/u03013112/ss-pb v1.0.30/go.mod h1:G6V/9h3aMEpKsGOLX6hsTZznLC4n5Y4DNLv2yka1Pco=
+github.com/u03013112/ss-pb v1.0.31 h1:FWauStA3W4QUUU8bW+YWf7X8kJFQwHmrzIC9szUQxFs=
+github.com/u03013112/ss-pb v1.0.31/go.mod h1:G6V/9h3aMEpKsGOLX6hsTZznLC4n5Y4DNLv2yka1Pco=
 github.com/uber-go/atomic v1.3.2/go.mod h1:/Ct5t2lcmbJ4OSe/waGBoaVvVqtO0bmtfVNex1PFV8g=
 github.com/urfave/cli v0.0.0-20171014202726-7bc6a0acffa5/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
 github.com/urfave/cli v1.22.1/go.mod h1:Gos4lmkARVdJ6EkW0WaNv/tZAAMe9V7XWyB60NtXRu0=

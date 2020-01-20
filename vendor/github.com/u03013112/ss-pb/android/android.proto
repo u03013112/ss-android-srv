@@ -23,6 +23,12 @@ service Android {
             body: "*"
         };
     }
+    rpc GetConfigV1 (GetConfigRequest) returns (GetConfigNewReply){
+        option (google.api.http) = {
+            post: "/v1/android/get-config-v1"
+            body: "*"
+        };
+    }
     rpc Keepalive (KeepaliveRequest) returns (KeepaliveReply){
         option (google.api.http) = {
             post: "/v1/android/keepalive"

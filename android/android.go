@@ -125,6 +125,47 @@ func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.Ge
 	return ret, nil
 }
 
+// GetConfigV1 :
+func (s *Srv) GetConfigV1(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetConfigNewReply, error) {
+	ret := new(pb.GetConfigNewReply)
+	ret0 := new(pb.GetConfigReply)
+
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	if user.ExpireDate.Unix() < time.Now().Unix() {
+		ret0.Error = "已过期，请及时续费"
+	}
+	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
+		ret0.Error = "流量不足，请及时续费"
+	}
+	config, err := grpcGetConfig()
+	if err != nil {
+		fmt.Print(err.Error())
+		return ret, err
+	}
+	if ret0.Error == "" {
+		ret0.IP = config.IP
+		ret0.Port = config.Port
+		ret0.Method = config.Method
+		ret0.Passwd = encode4Passwd(config.Passwd)
+	}
+	j, _ := json.Marshal(ret0)
+	ret.Config = encode(string(j))
+	return ret, nil
+}
+
+func encode4Passwd(passwd string) string {
+	p := []byte(passwd)
+	for i := 0; i < len(p); i++ {
+		p[i] = p[i] + 3
+	}
+	passwd = string(p)
+	return passwd
+}
+
 func encode(str string) string {
 	var i = 'a'
 	var ret = base64.StdEncoding.EncodeToString([]byte(str))
