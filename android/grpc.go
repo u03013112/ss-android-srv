@@ -13,7 +13,7 @@ const (
 	configAddress = "config:50001"
 )
 
-func grpcGetConfig() (*config.GetSSConfigReply, error) {
+func grpcGetConfig(lineID int64) (*config.GetSSConfigReply, error) {
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(configAddress, grpc.WithInsecure())
 	if err != nil {
@@ -25,7 +25,10 @@ func grpcGetConfig() (*config.GetSSConfigReply, error) {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.GetSSConfig(ctx, &config.GetSSConfigRequest{Token: "u03013112"})
+	r, err := c.GetSSConfig(ctx, &config.GetSSConfigRequest{
+		Token:  "u03013112",
+		LineID: lineID,
+	})
 	if err != nil {
 		log.Printf("could not GetSSConfig: %v", err)
 		return r, err

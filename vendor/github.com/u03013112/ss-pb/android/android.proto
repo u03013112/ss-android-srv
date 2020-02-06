@@ -78,6 +78,7 @@ message LoginReply {
 
 message GetConfigRequest {
     string token = 1;
+    int64 lineID = 2;
 }
 
 message GetConfigReply {

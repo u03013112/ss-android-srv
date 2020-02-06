@@ -81,7 +81,7 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 		}, nil
 	}
 	ret := new(pb.GetConfigReply)
-	if config, err := grpcGetConfig(); err != nil {
+	if config, err := grpcGetConfig(in.LineID); err != nil {
 		fmt.Print(err.Error())
 		return ret, err
 	} else {
@@ -109,7 +109,7 @@ func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.Ge
 	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
 		ret0.Error = "流量不足，请及时续费"
 	}
-	config, err := grpcGetConfig()
+	config, err := grpcGetConfig(in.LineID)
 	if err != nil {
 		fmt.Print(err.Error())
 		return ret, err
@@ -141,7 +141,7 @@ func (s *Srv) GetConfigV1(ctx context.Context, in *pb.GetConfigRequest) (*pb.Get
 	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
 		ret0.Error = "流量不足，请及时续费"
 	}
-	config, err := grpcGetConfig()
+	config, err := grpcGetConfig(in.LineID)
 	if err != nil {
 		fmt.Print(err.Error())
 		return ret, err
