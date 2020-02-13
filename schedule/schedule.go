@@ -20,6 +20,7 @@ func Init() {
 		for {
 			if e := check(); e != nil {
 				fmt.Printf("ckecj err:%s\n", e)
+				time.Sleep(time.Second * 60)
 				continue
 			}
 			time.Sleep(time.Second * 600)
