@@ -106,31 +106,31 @@ func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.Ge
 	ret.Config = encode(string(j))
 	return ret, nil
 
-	user, err := getUserByToken(in.Token)
-	if err != nil {
-		fmt.Print(err.Error())
-		return nil, err
-	}
-	if user.ExpireDate.Unix() < time.Now().Unix() {
-		ret0.Error = "已过期，请及时续费"
-	}
-	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
-		ret0.Error = "流量不足，请及时续费"
-	}
-	config, err := grpcGetConfig(in.LineID)
-	if err != nil {
-		fmt.Print(err.Error())
-		return ret, err
-	}
-	if ret0.Error == "" {
-		ret0.IP = config.IP
-		ret0.Port = config.Port
-		ret0.Method = config.Method
-		ret0.Passwd = config.Passwd
-	}
-	j, _ := json.Marshal(ret0)
-	ret.Config = encode(string(j))
-	return ret, nil
+	// user, err := getUserByToken(in.Token)
+	// if err != nil {
+	// 	fmt.Print(err.Error())
+	// 	return nil, err
+	// }
+	// if user.ExpireDate.Unix() < time.Now().Unix() {
+	// 	ret0.Error = "已过期，请及时续费"
+	// }
+	// if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic {
+	// 	ret0.Error = "流量不足，请及时续费"
+	// }
+	// config, err := grpcGetConfig(in.LineID)
+	// if err != nil {
+	// 	fmt.Print(err.Error())
+	// 	return ret, err
+	// }
+	// if ret0.Error == "" {
+	// 	ret0.IP = config.IP
+	// 	ret0.Port = config.Port
+	// 	ret0.Method = config.Method
+	// 	ret0.Passwd = config.Passwd
+	// }
+	// j, _ := json.Marshal(ret0)
+	// ret.Config = encode(string(j))
+	// return ret, nil
 }
 
 // GetConfigV1 :
