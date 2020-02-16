@@ -95,8 +95,16 @@ func (s *Srv) GetConfig(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetCo
 
 // GetConfigNew :
 func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.GetConfigNewReply, error) {
+
 	ret := new(pb.GetConfigNewReply)
 	ret0 := new(pb.GetConfigReply)
+
+	if ret0.Error == "" {
+		ret0.Error = "版本过旧，请及时升级！"
+	}
+	j, _ := json.Marshal(ret0)
+	ret.Config = encode(string(j))
+	return ret, nil
 
 	user, err := getUserByToken(in.Token)
 	if err != nil {
