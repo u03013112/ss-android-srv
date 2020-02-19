@@ -23,7 +23,7 @@ func Init() {
 				time.Sleep(time.Second * 60)
 				continue
 			}
-			time.Sleep(time.Second * 600)
+			time.Sleep(time.Second * 600 * 2)
 		}
 	}()
 }
