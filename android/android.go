@@ -100,7 +100,7 @@ func (s *Srv) GetConfigNew(ctx context.Context, in *pb.GetConfigRequest) (*pb.Ge
 	ret0 := new(pb.GetConfigReply)
 
 	if ret0.Error == "" {
-		ret0.Error = "版本过旧，请及时升级！"
+		ret0.Error = "版本过旧，请及时升级！如有疑问，请加Q群：974527719。"
 	}
 	j, _ := json.Marshal(ret0)
 	ret.Config = encode(string(j))
