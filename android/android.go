@@ -206,7 +206,7 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 		rxUse = in.Rx
 	}
 	user.BaseRxTraffic = in.Rx
-	user.UsedRxTraffic += rxUse
+	user.UsedRxTraffic += rxUse * 8 / 5
 
 	txUse := int64(0)
 	if in.Tx >= user.BaseTxTraffic {
@@ -215,7 +215,7 @@ func (s *Srv) Keepalive(ctx context.Context, in *pb.KeepaliveRequest) (*pb.Keepa
 		txUse = in.Tx
 	}
 	user.BaseTxTraffic = in.Tx
-	user.UsedTxTraffic += txUse
+	user.UsedTxTraffic += txUse * 8 / 5
 
 	ret.Used = user.UsedRxTraffic + user.UsedTxTraffic
 	if user.UsedRxTraffic+user.UsedTxTraffic >= user.TotalRxTraffic {
