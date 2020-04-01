@@ -336,7 +336,6 @@ func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSUR
 	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic+100*1024*1024 {
 		ret.Error = "流量不足，请及时续费"
 	}
-	// +100MB
 	if in.LineID < 10000 {
 		ret.Error = "此线路不支持导出"
 	}
@@ -349,6 +348,8 @@ func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSUR
 		t := fmt.Sprintf("%s:%s@%s:%s", config.Method, config.Passwd, config.IP, config.Port)
 		base := base64.StdEncoding.EncodeToString([]byte(t))
 		ret.Url = "ss://" + base
+		user.UsedRxTraffic += 100 * 1024 * 1024
+		user.update()
 	}
 	return ret, nil
 }
