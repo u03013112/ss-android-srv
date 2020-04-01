@@ -29,6 +29,12 @@ service Android {
             body: "*"
         };
     }
+    rpc GetSSURL (GetSSURLRequest) returns (GetSSURLReply){
+        option (google.api.http) = {
+            post: "/v1/android/get-ssurl"
+            body: "*"
+        };
+    }
     rpc Keepalive (KeepaliveRequest) returns (KeepaliveReply){
         option (google.api.http) = {
             post: "/v1/android/keepalive"
@@ -150,4 +156,14 @@ message GetUserInfoReply {
 
 message GetConfigNewReply {
     string config = 1;
+}
+
+message GetSSURLRequest {
+    string token = 1;
+    int64 lineID = 2;
+}
+
+message GetSSURLReply {
+    string url = 1;
+    string error = 9;
 }

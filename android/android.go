@@ -318,3 +318,35 @@ func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.G
 	}
 	return ret, nil
 }
+
+// GetSSURL :
+func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSURLReply, error) {
+	ret := &pb.GetSSURLReply{}
+
+	user, err := getUserByToken(in.Token)
+	if err != nil {
+		fmt.Print(err.Error())
+		return nil, err
+	}
+	if user.ExpireDate.Unix() < time.Now().Unix() {
+		ret.Error = "已过期，请及时续费"
+	}
+	if user.TotalRxTraffic < user.UsedRxTraffic+user.UsedTxTraffic+100*1024*1024 {
+		ret.Error = "流量不足，请及时续费"
+	}
+	// +100MB
+	if in.LineID < 10000 {
+		ret.Error = "此线路不支持导出"
+	}
+	config, err := grpcGetConfig(in.LineID)
+	if err != nil {
+		fmt.Print(err.Error())
+		return ret, err
+	} else {
+		// aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@45.79.115.244:8099
+		t := fmt.Sprintf("%s:%s@%s:%s", config.Method, config.Passwd, config.IP, config.Port)
+		base := base64.StdEncoding.EncodeToString([]byte(t))
+		ret.Url = "ss://" + base
+	}
+	return ret, nil
+}

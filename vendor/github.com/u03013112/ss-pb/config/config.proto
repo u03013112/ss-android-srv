@@ -30,6 +30,12 @@ service SSConfig {
         };
     }
     rpc SetPasswd(SetPasswdRequest) returns (Void) {}
+    rpc GetSSURL(GetSSURLRequest) returns (GetSSURLReply) {
+        option (google.api.http) = {
+            post: "/v1/config/getssurl"
+            body: "*"
+        };
+    }
 }
 
 message Void {}
@@ -86,4 +92,12 @@ message GetSSLineConfigReply {
 
 message SetPasswdRequest {
     string passwd = 1;
+}
+
+message GetSSURLRequest {
+    int64 lineID = 1;
+}
+
+message GetSSURLReply {
+    string url = 1;
 }
