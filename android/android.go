@@ -321,7 +321,9 @@ func (s *Srv) GetUserInfo(ctx context.Context, in *pb.GetUserInfoRequest) (*pb.G
 
 // GetSSURL :
 func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSURLReply, error) {
-	ret := &pb.GetSSURLReply{}
+	ret := &pb.GetSSURLReply{
+		Error: "",
+	}
 
 	user, err := getUserByToken(in.Token)
 	if err != nil {
@@ -342,7 +344,8 @@ func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSUR
 	if err != nil {
 		fmt.Print(err.Error())
 		return ret, err
-	} else {
+	}
+	if ret.Error == "" {
 		// aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@45.79.115.244:8099
 		t := fmt.Sprintf("%s:%s@%s:%s", config.Method, config.Passwd, config.IP, config.Port)
 		base := base64.StdEncoding.EncodeToString([]byte(t))
