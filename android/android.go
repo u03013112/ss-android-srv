@@ -346,7 +346,6 @@ func (s *Srv) GetSSURL(ctx context.Context, in *pb.GetSSURLRequest) (*pb.GetSSUR
 		return ret, err
 	}
 	if ret.Error == "" {
-		// aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@45.79.115.244:8099
 		t := fmt.Sprintf("%s:%s@%s:%s", config.Method, config.Passwd, config.IP, config.Port)
 		base := base64.StdEncoding.EncodeToString([]byte(t))
 		ret.Url = "ss://" + base
