@@ -5,7 +5,6 @@ import (
 	"net"
 
 	"github.com/u03013112/ss-android/android"
-	"github.com/u03013112/ss-android/schedule"
 	pb "github.com/u03013112/ss-pb/android"
 	"google.golang.org/grpc"
 )
@@ -16,7 +15,7 @@ const (
 
 func main() {
 	android.InitDB()
-	schedule.Init()
+	// schedule.Init()
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

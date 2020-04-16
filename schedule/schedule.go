@@ -19,7 +19,7 @@ func Init() {
 	go func() {
 		for {
 			if e := check(); e != nil {
-				fmt.Printf("ckecj err:%s\n", e)
+				fmt.Printf("ckeck err:%s\n", e)
 				time.Sleep(time.Second * 60)
 				continue
 			}
